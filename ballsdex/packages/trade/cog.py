@@ -106,7 +106,13 @@ class Trade(commands.GroupCog):
                 "You cannot trade with yourself.", ephemeral=True
             )
             return
-
+       
+        guild: discord.Guild = interaction.guild
+        if user not in guild.members:
+            await interaction.response.send_message(
+                "You can only trade with members of the same server.", ephemeral=True
+            )
+        return
         trade1, trader1 = self.get_trade(interaction)
         trade2, trader2 = self.get_trade(channel=interaction.channel, user=user)  # type: ignore
         if trade1 or trader1:
@@ -114,6 +120,7 @@ class Trade(commands.GroupCog):
                 "You already have an ongoing trade.", ephemeral=True
             )
             return
+
         if trade2 or trader2:
             await interaction.response.send_message(
                 "The user you are trying to trade with is already in a trade.", ephemeral=True
