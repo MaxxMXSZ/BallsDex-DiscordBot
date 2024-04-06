@@ -60,7 +60,9 @@ class Player(commands.GroupCog):
         ]
     )
     async def donation_policy(
-        self, interaction: discord.Interaction, policy: app_commands.Choice[int], 
+        self,
+        interaction: discord.Interaction,
+        policy: app_commands.Choice[int],
         balls=settings.players_group_cog_name
     ):
         """
