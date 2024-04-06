@@ -63,7 +63,7 @@ class Player(commands.GroupCog):
         self,
         interaction: discord.Interaction,
         policy: app_commands.Choice[int],
-        balls=settings.players_group_cog_name
+        balls=settings.players_group_cog_name,
     ):
         """
         Change how you want to receive donations from /balls give
