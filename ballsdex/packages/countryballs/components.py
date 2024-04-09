@@ -84,8 +84,7 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
             await interaction.followup.edit_message(self.ball.message.id, view=self.button.view)
         else:
             await interaction.response.send_message(
-                f"{interaction.user.mention} " 
-                "Nuh uh thats not right buddy try again"
+                f"{interaction.user.mention} Nuh uh thats not right buddy try again"
             )
 
     async def catch_ball(
