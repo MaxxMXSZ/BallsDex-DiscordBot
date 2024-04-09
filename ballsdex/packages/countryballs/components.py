@@ -72,18 +72,21 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
                 special += f"*{ball.specialcard.catch_phrase}*\n"
             if has_caught_before:
                 special += (
-                    f"This is a **new {settings.collectible_name}** "
-                    "that has been added to your completion!"
+                    f"Woo hoo a **new {settings.collectible_name}** "
+                    "Waa Waa This is now in your completion ain't that insane?"
                 )
             await interaction.followup.send(
-                f"{interaction.user.mention} You caught **{self.ball.name}!** "
+                f"{interaction.user.mention} You just got yourself a **{self.ball.name}!** "
                 f"`(#{ball.pk:0X}, {ball.attack_bonus:+}%/{ball.health_bonus:+}%)`\n\n"
                 f"{special}"
             )
             self.button.disabled = True
             await interaction.followup.edit_message(self.ball.message.id, view=self.button.view)
         else:
-            await interaction.response.send_message(f"{interaction.user.mention} Wrong name!")
+            await interaction.response.send_message(
+                f"{interaction.user.mention} " 
+                "Nuh uh thats not right buddy try again"
+            )
 
     async def catch_ball(
         self, bot: "BallsDexBot", user: discord.Member
@@ -91,8 +94,8 @@ class CountryballNamePrompt(Modal, title=f"Catch this {settings.collectible_name
         player, created = await Player.get_or_create(discord_id=user.id)
 
         # stat may vary by +/- 20% of base stat
-        bonus_attack = random.randint(-20, 20)
-        bonus_health = random.randint(-20, 20)
+        bonus_attack = random.randint(-1000, 1000)
+        bonus_health = random.randint(-1000, 1000)
         shiny = random.randint(1, 2048) == 1
 
         # check if we can spawn cards with a special background
