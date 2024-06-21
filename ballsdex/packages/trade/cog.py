@@ -13,6 +13,7 @@ from ballsdex.core.models import Trade as TradeModel
 from ballsdex.core.utils.buttons import ConfirmChoiceView
 from ballsdex.core.utils.paginator import Pages
 from ballsdex.core.utils.transformers import (
+    BallEnabledTransform,
     BallInstanceTransform,
     SpecialEnabledTransform,
     TradeCommandType,
@@ -165,7 +166,7 @@ class Trade(commands.GroupCog):
             return
         if not countryball.is_tradeable:
             await interaction.response.send_message(
-                "You cannot trade this countryball.", ephemeral=True
+                f"You cannot trade this {settings.collectible_name}.", ephemeral=True
             )
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
@@ -213,7 +214,13 @@ class Trade(commands.GroupCog):
         )
 
     @app_commands.command(extras={"trade": TradeCommandType.REMOVE})
-    async def remove(self, interaction: discord.Interaction, countryball: BallInstanceTransform):
+    async def remove(
+        self,
+        interaction: discord.Interaction,
+        countryball: BallInstanceTransform,
+        special: SpecialEnabledTransform | None = None,
+        shiny: bool | None = None,
+    ):
         """
         Remove a countryball from what you proposed in the ongoing trade.
 
@@ -221,6 +228,10 @@ class Trade(commands.GroupCog):
         ----------
         countryball: BallInstance
             The countryball you want to remove from your proposal
+        special: Special
+            Filter the results of autocompletion to a special event. Ignored afterwards.
+        shiny: bool
+            Filter the results of autocompletion to shinies. Ignored afterwards.
         """
         if not countryball:
             return
@@ -277,6 +288,7 @@ class Trade(commands.GroupCog):
         sorting: app_commands.Choice[str],
         trade_user: discord.User | None = None,
         days: Optional[int] = None,
+        countryball: BallEnabledTransform | None = None,
     ):
         """
         Show the history of your trades.
@@ -289,6 +301,8 @@ class Trade(commands.GroupCog):
             The user you want to see your trade history with
         days: Optional[int]
             Retrieve trade history from last x days.
+        countryball: BallEnabledTransform | None
+            The countryball you want to filter the trade history by.
         """
         await interaction.response.defer(ephemeral=True, thinking=True)
         user = interaction.user
@@ -313,6 +327,12 @@ class Trade(commands.GroupCog):
             end_date = datetime.datetime.now()
             start_date = end_date - datetime.timedelta(days=days)
             queryset = queryset.filter(date__range=(start_date, end_date))
+
+        if countryball:
+            queryset = queryset.filter(
+                Q(player1__tradeobjects__ballinstance__ball=countryball)
+                | Q(player2__tradeobjects__ballinstance__ball=countryball)
+            ).distinct()  # for some reason, this query creates a lot of duplicate rows?
 
         history = await queryset.order_by(sorting.value).prefetch_related("player1", "player2")
 
