@@ -26,13 +26,6 @@ stats_font = ImageFont.truetype(str(SOURCES_PATH / "Bobby Jones Soft.otf"), 130)
 credits_font = ImageFont.truetype(str(SOURCES_PATH / "arial.ttf"), 40)
 
 
-def get_text_color(image: Image.Image, region: tuple) -> tuple:
-    cropped = image.crop(region)
-    dominant_color = cropped.resize((1, 1)).getpixel((0, 0))
-    brightness = sum(dominant_color[:3]) / 3
-    return (255, 255, 255) if brightness < 128 else (0, 0, 0)
-
-
 def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/media/"):
     ball = ball_instance.countryball
     ball_health = (237, 115, 101, 255)
@@ -93,14 +86,13 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         stroke_fill=(0, 0, 0, 255),
         anchor="ra",
     )
-    credits_color = get_text_color(image, (0, int(image.height * 0.8), image.width, image.height))
     draw.text(
         (30, 1870),
         # Modifying the line below is breaking the licence as you are removing credits
         # If you don't want to receive a DMCA, just don't
         "Created by El Laggron\n" f"Artwork author: {ball_credits}",
         font=credits_font,
-        fill=credits_color,
+        fill=(0, 0, 0, 255),
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
