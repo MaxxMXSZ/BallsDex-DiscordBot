@@ -103,7 +103,7 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         # If you don't want to receive a DMCA, just don't
         "Created by El Laggron\n" f"Artwork author: {ball_credits}",
         font=credits_font,
-        fill=(0, 0, 0, 255),
+        fill=credits_color,
         stroke_width=0,
         stroke_fill=(255, 255, 255, 255),
     )
