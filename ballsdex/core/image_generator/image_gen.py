@@ -94,7 +94,9 @@ def draw_card(ball_instance: "BallInstance", media_path: str = "./admin_panel/me
         stroke_fill=(0, 0, 0, 255),
         anchor="ra",
     )
-    credits_color = get_credit_color(image, (0, int(image.height * 0.8), image.width, image.height))
+    credits_color = get_credit_color(
+        image, (0, int(image.height * 0.8), image.width, image.height)
+    )
     draw.text(
         (30, 1870),
         # Modifying the line below is breaking the licence as you are removing credits
